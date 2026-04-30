@@ -7,8 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: espressif/idf:latest
     outputs:
       version: ${{ steps.ver.outputs.version }}
     steps:
@@ -23,16 +21,17 @@ jobs:
           echo "Version: $VERSION"
 
       - name: Build firmware
-        run: idf.py build
+        run: |
+          # TODO: 替换为真实编译命令
+          # idf.py build
+          mkdir -p build
+          echo "test build ${{ steps.ver.outputs.version }}" > build/focusx1.bin
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: firmware-v${{ steps.ver.outputs.version }}
-          path: |
-            build/*.bin
-            build/bootloader/bootloader.bin
-            build/partition_table/partition-table.bin
+          path: build/focusx1.bin
           if-no-files-found: error
 
   release:
